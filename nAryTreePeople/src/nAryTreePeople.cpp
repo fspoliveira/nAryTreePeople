@@ -10,8 +10,6 @@
 
 #include <iostream>
 #include <stdlib.h>
-#include <sstream>
-#include <stdlib.h>
 
 using namespace std;
 
@@ -24,6 +22,7 @@ typedef struct sNaryNode {
 typedef struct sPeople {
 	int id;
 	int age;
+	string *name;
 } People;
 
 typedef NaryNode NaryTree;
@@ -32,7 +31,7 @@ typedef void (*DataFreeFunc)(const void *);
 NaryTree *createNode(int children, void *data);
 int appendChild(NaryNode *root, void *data);
 void *createIntData(int data);
-void *createPeople(int id, string nome, int idade);
+void *createPeople(int id, string name, int idade);
 void printTree(NaryTree *tree);
 void freeTree(NaryTree *tree, DataFreeFunc dFree);
 
@@ -75,10 +74,11 @@ void *createIntData(int data) {
 	return ptr;
 }
 
-void *createPeople(int id, string nome, int idade) {
+void *createPeople(int id, string name, int idade) {
 	sPeople *ptr = (sPeople*) calloc(1, sizeof(sPeople));
 	ptr->id = id;
 	ptr->age = idade;
+	ptr->name = &name;
 	return ptr;
 }
 
@@ -88,8 +88,9 @@ void printTree(NaryTree *tree) {
 		return;
 
 	sPeople people = (*(sPeople*) tree->data);
-	cout << people.id << endl;
-	cout << people.age << endl;
+	cout << "Id:" << people.id << endl;
+	cout << "Age:" <<people.age << endl;
+	cout << "Name:" <<  people.name << endl;
 
 	for (int i = 0; i < tree->n; i++)
 		printTree(tree->child[i]);
@@ -108,4 +109,3 @@ void freeTree(NaryTree *tree, DataFreeFunc dFree) {
 		dFree(tree->data);
 	free(tree);
 }
-
