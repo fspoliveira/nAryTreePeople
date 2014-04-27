@@ -41,7 +41,7 @@ int main() {
 	NaryTree *tree = createNode(0, createIntData(0));
 
 	appendChild(tree, createPeople(1, "Fernando", 34));
-	appendChild(tree, createPeople(2, "Claudia", 34));
+	appendChild(tree, createPeople(2, "Claudia", 35));
 
 	printTree(tree);
 
