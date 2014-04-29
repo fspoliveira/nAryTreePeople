@@ -21,6 +21,7 @@ typedef NaryNode NaryTree;
 typedef void (*DataFreeFunc)(const void *);
 
 NaryTree *createNode(int children, void *data);
+NaryTree *findNode(NaryTree *tree, int id);
 int appendChild(NaryNode *root, void *data);
 void *createPeople(int id, string name, int age);
 void printTree(NaryTree *tree);
@@ -36,12 +37,37 @@ int main() {
 
 	appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
 
-	printTree(tree);
+	//printTree(tree);
+	findNode(tree, 3);
 
 	DataFreeFunc dFree;
 	freeTree(tree, dFree);
 
 	return 0;
+}
+
+NaryTree *findNode(NaryTree *tree, int id) {
+
+	NaryNode *node = (NaryNode*) calloc(1, sizeof(NaryNode));
+	sPeople people;
+
+	if (typeid((*(sPeople*) tree->data)) == typeid(sPeople)) {
+		people = (*(sPeople*) tree->data);
+		cout << "Id:" << people.id << endl;
+		cout << "Age:" << people.age << endl;
+		cout << "Name:" << people.name->c_str() << endl;
+	}
+
+	if (people.id == id) {
+		cout << "Achou" << endl;
+	}
+
+	for (int i = 0; i < tree->n; i++) {
+
+		findNode(tree->child[i], id);
+	}
+
+	return tree;
 }
 
 NaryTree *createNode(int children, void *data) {
