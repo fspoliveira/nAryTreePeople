@@ -33,14 +33,13 @@ int main() {
 	//root
 	NaryTree *tree = createNode(0, createPeople(0, "Grandhmother", 80));
 
-//	appendChild(tree, createPeople(1, "Son1", 34));
-//	appendChild(tree, createPeople(2, "Son2", 33));
-//
-//	appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
+	appendChild(tree, createPeople(1, "Son1", 34));
+	appendChild(tree, createPeople(2, "Son2", 33));
 
-	printTree(tree);
-	//findNode(tree, 3);
+	appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
 
+	//printTree(tree);
+	findNode(tree, 11);
 	freeTree(tree, dFree);
 
 	return 0;
@@ -48,7 +47,8 @@ int main() {
 
 NaryTree *findNode(NaryTree *tree, int id) {
 
-	NaryNode *node = (NaryNode*) calloc(1, sizeof(NaryNode));
+	//NaryNode *node = (NaryNode*) calloc(1, sizeof(NaryNode));
+
 	sPeople people;
 
 	if (typeid((*(sPeople*) tree->data)) == typeid(sPeople)) {
@@ -56,13 +56,14 @@ NaryTree *findNode(NaryTree *tree, int id) {
 		cout << "Id:" << people.id << endl;
 		cout << "Age:" << people.age << endl;
 		cout << "Name:" << people.name->c_str() << endl;
+
+		if (people.id == id) {
+			cout << "Achou" << endl;
+		}
+		cout << "************:" << endl;
 	}
 
-	if (people.id == id) {
-		cout << "Achou" << endl;
-	}
-
-	for (int i = 0; i < tree->n; i++) {
+	for (int i = 0; i < tree->n; ++i) {
 
 		findNode(tree->child[i], id);
 	}
@@ -116,7 +117,7 @@ void freeTree(NaryTree *tree, DataFreeFunc dFree) {
 	if (tree == NULL)
 		return;
 
-	 for (int i = 0; i < tree->n; ++i)
+	for (int i = 0; i < tree->n; ++i)
 		freeTree(tree->child[i], dFree);
 
 	free(tree->child);
