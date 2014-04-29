@@ -40,7 +40,8 @@ int main() {
 
 	insertNodebyID(tree, 1, createPeople(11, "Son1 of Son1", 2));
 	insertNodebyID(tree, 2, createPeople(21, "Son1 of Son2", 2));
-	insertNodebyID(tree, 21, createPeople(211, "Filho do 21", 1));
+	insertNodebyID(tree, 21, createPeople(211, "Son 1 of 21", 1));
+	insertNodebyID(tree, 21, createPeople(212, "Son 2 of 22", 2));
 
 	printTree(tree);
 
@@ -50,17 +51,10 @@ int main() {
 }
 
 void insertNodebyID(NaryTree *tree, int id, void *data) {
-
-	sPeople people;
-
 	if (typeid((*(sPeople*) tree->data)) == typeid(sPeople)) {
-		people = (*(sPeople*) tree->data);
-//		cout << "Id:" << people.id << endl;
-//		cout << "Age:" << people.age << endl;
-//		cout << "Name:" << people.name->c_str() << endl;
+		sPeople people = (*(sPeople*) tree->data);
 
 		if (people.id == id) {
-			cout << "Achou" << endl;
 			appendChild(tree, data);
 		}
 	}
@@ -105,6 +99,7 @@ void printTree(NaryTree *tree) {
 		cout << "Id:" << people.id << endl;
 		cout << "Age:" << people.age << endl;
 		cout << "Name:" << people.name->c_str() << endl;
+		cout <<"**************************************:" <<  endl;
 	}
 
 	for (int i = 0; i < tree->n; i++)
