@@ -1,15 +1,7 @@
-//============================================================================
-// Name        : Tree.cpp
-// Author      : Fernando Santiago
-// Version     : 1.3
-// Copyright   : Open
-// More Info   : http://www.gnu.org/licenses/gpl-howto.pt-br.html
-// Based       : http://kylelemons.net/download/Complex_Data_Structures_N-ary_Tree_PDF.pdf
-// Description : N-Ary Tree in C++, Ansi-style
-//============================================================================
-
 #include <iostream>
 #include <stdlib.h>
+#include <string>
+#include <typeinfo>
 
 using namespace std;
 
@@ -21,8 +13,8 @@ typedef struct sNaryNode {
 
 typedef struct sPeople {
 	int id;
-	int age;
 	string *name;
+	int age;
 } People;
 
 typedef NaryNode NaryTree;
@@ -30,18 +22,19 @@ typedef void (*DataFreeFunc)(const void *);
 
 NaryTree *createNode(int children, void *data);
 int appendChild(NaryNode *root, void *data);
-void *createIntData(int data);
-void *createPeople(int id, string name, int idade);
+void *createPeople(int id, string name, int age);
 void printTree(NaryTree *tree);
 void freeTree(NaryTree *tree, DataFreeFunc dFree);
 
 int main() {
 
 	//root
-	NaryTree *tree = createNode(0, createIntData(0));
+	NaryTree *tree = createNode(0, createPeople(0, "Grandhmother", 80));
 
-	appendChild(tree, createPeople(1, "Fernando", 34));
-	appendChild(tree, createPeople(2, "Claudia", 35));
+	appendChild(tree, createPeople(1, "Son1", 34));
+	appendChild(tree, createPeople(2, "Son2", 33));
+
+	appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
 
 	printTree(tree);
 
@@ -56,7 +49,6 @@ NaryTree *createNode(int children, void *data) {
 	node->data = data;
 	node->n = children;
 	node->child = (NaryNode**) calloc(children, sizeof(NaryNode*));
-
 	return node;
 }
 
@@ -68,17 +60,12 @@ int appendChild(NaryNode *root, void *data) {
 	return root->n - 1;
 }
 
-void *createIntData(int data) {
-	int *ptr = (int*) calloc(1, sizeof(int));
-	*ptr = data;
-	return ptr;
-}
-
-void *createPeople(int id, string name, int idade) {
+void *createPeople(int id, string name, int age) {
 	sPeople *ptr = (sPeople*) calloc(1, sizeof(sPeople));
 	ptr->id = id;
-	ptr->age = idade;
-	ptr->name = &name;
+	ptr->age = age;
+	//ptr->name  = &name;
+	ptr->name = new string(name);
 	return ptr;
 }
 
@@ -87,10 +74,12 @@ void printTree(NaryTree *tree) {
 	if (tree == NULL)
 		return;
 
-	sPeople people = (*(sPeople*) tree->data);
-	cout << "Id:" << people.id << endl;
-	cout << "Age:" <<people.age << endl;
-	cout << "Name:" <<  people.name << endl;
+	if (typeid((*(sPeople*) tree->data)) == typeid(sPeople)) {
+		sPeople people = (*(sPeople*) tree->data);
+		cout << "Id:" << people.id << endl;
+		cout << "Age:" << people.age << endl;
+		cout << "Name:" << people.name->c_str() << endl;
+	}
 
 	for (int i = 0; i < tree->n; i++)
 		printTree(tree->child[i]);
