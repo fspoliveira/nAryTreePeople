@@ -19,6 +19,7 @@ typedef struct sPeople {
 
 typedef NaryNode NaryTree;
 typedef void (*DataFreeFunc)(const void *);
+DataFreeFunc dFree;
 
 NaryTree *createNode(int children, void *data);
 NaryTree *findNode(NaryTree *tree, int id);
@@ -32,15 +33,14 @@ int main() {
 	//root
 	NaryTree *tree = createNode(0, createPeople(0, "Grandhmother", 80));
 
-	appendChild(tree, createPeople(1, "Son1", 34));
-	appendChild(tree, createPeople(2, "Son2", 33));
+//	appendChild(tree, createPeople(1, "Son1", 34));
+//	appendChild(tree, createPeople(2, "Son2", 33));
+//
+//	appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
 
-	appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
+	printTree(tree);
+	//findNode(tree, 3);
 
-	//printTree(tree);
-	findNode(tree, 3);
-
-	DataFreeFunc dFree;
 	freeTree(tree, dFree);
 
 	return 0;
@@ -87,11 +87,12 @@ int appendChild(NaryNode *root, void *data) {
 }
 
 void *createPeople(int id, string name, int age) {
+
 	sPeople *ptr = (sPeople*) calloc(1, sizeof(sPeople));
 	ptr->id = id;
 	ptr->age = age;
-	//ptr->name  = &name;
 	ptr->name = new string(name);
+
 	return ptr;
 }
 
@@ -112,12 +113,11 @@ void printTree(NaryTree *tree) {
 }
 
 void freeTree(NaryTree *tree, DataFreeFunc dFree) {
-
 	if (tree == NULL)
 		return;
 
-	for (int i = 0; i < tree->n; i++)
-		freeTree(tree, dFree);
+	 for (int i = 0; i < tree->n; ++i)
+		freeTree(tree->child[i], dFree);
 
 	free(tree->child);
 	if (dFree)
