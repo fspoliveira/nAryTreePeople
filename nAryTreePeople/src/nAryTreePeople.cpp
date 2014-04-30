@@ -7,6 +7,7 @@ int main() {
 
 	appendChild(tree, createPeople(1, "Son1", 34));
 	appendChild(tree, createPeople(2, "Son2", 33));
+	appendChild(tree, createPeople(3, "Son3", 90));
 
 	//appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
 
