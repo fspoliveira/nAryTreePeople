@@ -18,6 +18,8 @@ int main() {
 
 	insertNodebyID(tree, 212, createPeople(2121, "Son 1 of 212", 3));
 
+    cout<< "Size of Tree: " << sizeOfNaryTree(tree) <<endl;
+
 	printTree(tree);
 
 	freeTree(tree, dFree);
@@ -55,7 +57,6 @@ int appendChild(NaryNode *root, void *data) {
 }
 
 void *createPeople(int id, string name, int age) {
-
 	sPeople *ptr = (sPeople*) calloc(1, sizeof(sPeople));
 	ptr->id = id;
 	ptr->age = age;
@@ -92,4 +93,18 @@ void freeTree(NaryTree *tree, DataFreeFunc dFree) {
 	if (dFree)
 		dFree(tree->data);
 	free(tree);
+}
+
+unsigned sizeOfNaryTree(NaryNode *root)
+{
+  unsigned size = 0;
+
+  if (root)
+  {
+    size++;
+    for (int i = 0; i < root->n; ++i)
+      size += sizeOfNaryTree(root->child[i]);
+  }
+
+  return size;
 }
