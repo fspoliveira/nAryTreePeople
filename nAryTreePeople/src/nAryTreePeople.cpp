@@ -7,20 +7,22 @@ int main() {
 
 	appendChild(tree, createPeople(1, "Son1", 34));
 	appendChild(tree, createPeople(2, "Son2", 33));
-	appendChild(tree, createPeople(3, "Son3", 90));
+	appendChild(tree, createPeople(3, "Son3", 60));
 
 	//static mode
 	//appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 1));
 
 	/**************************************************************************
-	 dynamic mode
-	 **************************************************************************/
+	                          dynamic mode
+	***************************************************************************/
 	insertNodebyID(tree, 1, createPeople(11, "Son1 of Son1", 1), true);
 
 	//Son from id 2 with id 21
 	insertNodebyID(tree, 2, createPeople(21, "Son1 of Son2", 2), true);
 	//Son from id 21 with id 211
 	insertNodebyID(tree, 21, createPeople(211, "Son1 of Son21", 21), true);
+
+	insertNodebyID(tree, 3, createPeople(31, "Son1 of Son3", 33), true);
 
 	cout << "Size of Tree: " << sizeOfNaryTree(tree) << endl;
 
@@ -118,6 +120,5 @@ unsigned sizeOfNaryTree(NaryNode *root) {
 		for (int i = 0; i < root->n; ++i)
 			size += sizeOfNaryTree(root->child[i]);
 	}
-
 	return size;
 }
