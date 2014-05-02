@@ -9,16 +9,20 @@ int main() {
 	appendChild(tree, createPeople(2, "Son2", 33));
 	appendChild(tree, createPeople(3, "Son3", 90));
 
-	//appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 2));
+	//static mode
+	//appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 1));
 
-	insertNodebyID(tree, 1, createPeople(11, "Son1 of Son1", 2));
-	insertNodebyID(tree, 2, createPeople(21, "Son1 of Son2", 2));
-	insertNodebyID(tree, 21, createPeople(211, "Son 1 of 21", 1));
-	insertNodebyID(tree, 21, createPeople(212, "Son 2 of 21", 2));
+	/**************************************************************************
+	 dynamic mode
+	 **************************************************************************/
+	insertNodebyID(tree, 1, createPeople(11, "Son1 of Son1", 1), true);
 
-	insertNodebyID(tree, 212, createPeople(2121, "Son 1 of 212", 3));
+	//Son from id 2 with id 21
+	insertNodebyID(tree, 2, createPeople(21, "Son1 of Son2", 2), true);
+	//Son from id 21 with id 211
+	insertNodebyID(tree, 21, createPeople(211, "Son1 of Son21", 21), true);
 
-    cout<< "Size of Tree: " << sizeOfNaryTree(tree) <<endl;
+	cout << "Size of Tree: " << sizeOfNaryTree(tree) << endl;
 
 	printTree(tree);
 
@@ -27,17 +31,28 @@ int main() {
 	return 0;
 }
 
-void insertNodebyID(NaryTree *tree, int id, void *data) {
-	if (typeid((*(sPeople*) tree->data)) == typeid(sPeople)) {
-		sPeople people = (*(sPeople*) tree->data);
+bool insertNodebyID(NaryTree *tree, int id, void *data, bool searchNode) {
 
-		if (people.id == id) {
-			appendChild(tree, data);
+	if (tree == NULL)
+		return false;
+
+	if (typeid((*(sPeople*) tree->data)) == typeid(sPeople)) {
+
+		if (searchNode) {
+			sPeople people = (*(sPeople*) tree->data);
+
+			if (people.id == id) {
+				appendChild(tree, data);
+				searchNode = false;
+				return searchNode;
+			}
+
+			for (int i = 0; i < tree->n; ++i)
+				searchNode = insertNodebyID(tree->child[i], id, data,
+						searchNode);
 		}
 	}
-
-	for (int i = 0; i < tree->n; ++i)
-		insertNodebyID(tree->child[i], id, data);
+	return searchNode;
 }
 
 NaryTree *createNode(int children, void *data) {
@@ -75,7 +90,7 @@ void printTree(NaryTree *tree) {
 		cout << "Id:" << people.id << endl;
 		cout << "Age:" << people.age << endl;
 		cout << "Name:" << people.name->c_str() << endl;
-		cout <<"**************************************:" <<  endl;
+		cout << "**************************************:" << endl;
 	}
 
 	for (int i = 0; i < tree->n; i++)
@@ -95,16 +110,14 @@ void freeTree(NaryTree *tree, DataFreeFunc dFree) {
 	free(tree);
 }
 
-unsigned sizeOfNaryTree(NaryNode *root)
-{
-  unsigned size = 0;
+unsigned sizeOfNaryTree(NaryNode *root) {
+	unsigned size = 0;
 
-  if (root)
-  {
-    size++;
-    for (int i = 0; i < root->n; ++i)
-      size += sizeOfNaryTree(root->child[i]);
-  }
+	if (root) {
+		size++;
+		for (int i = 0; i < root->n; ++i)
+			size += sizeOfNaryTree(root->child[i]);
+	}
 
-  return size;
+	return size;
 }

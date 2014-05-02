@@ -25,7 +25,7 @@ typedef void (*DataFreeFunc)(const void *);
 DataFreeFunc dFree;
 
 NaryTree *createNode(int children, void *data);
-void insertNodebyID(NaryTree *tree, int id, void *data);
+bool insertNodebyID(NaryTree *tree, int id, void *data,bool searchNode);
 int appendChild(NaryNode *root, void *data);
 void *createPeople(int id, string name, int age);
 void printTree(NaryTree *tree);
