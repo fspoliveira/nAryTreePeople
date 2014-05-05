@@ -25,11 +25,12 @@ typedef void (*DataFreeFunc)(const void *);
 DataFreeFunc dFree;
 
 NaryTree *createNode(int children, void *data);
-bool insertNodebyID(NaryTree *tree, int id, void *data,bool searchNode);
+bool insertNodeById(NaryTree *tree, int id, void *data,bool searchNode);
+bool verifyKeySonOfNode(NaryTree *tree, void *data);
 int appendChild(NaryNode *root, void *data);
 void *createPeople(int id, string name, int age);
 void printTree(NaryTree *tree);
 void freeTree(NaryTree *tree, DataFreeFunc dFree);
-unsigned  sizeOfNaryTree(NaryNode *root);
+unsigned sizeOfNaryTree(NaryNode *root);
 
 #endif /* NARYTREEPEOPLE_H_ */

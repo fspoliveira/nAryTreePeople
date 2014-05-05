@@ -13,16 +13,18 @@ int main() {
 	//appendChild(tree->child[0], createPeople(11, "Son1 of Son1", 1));
 
 	/**************************************************************************
-	                          dynamic mode
-	***************************************************************************/
-	insertNodebyID(tree, 1, createPeople(11, "Son1 of Son1", 1), true);
+	 dynamic mode
+	 ***************************************************************************/
+	//dont include duplicade items
+	insertNodeById(tree, 1, createPeople(11, "Son1 of Son1", 1), true);
+	insertNodeById(tree, 1, createPeople(11, "Son1 of Son1", 1), true);
 
 	//Son from id 2 with id 21
-	insertNodebyID(tree, 2, createPeople(21, "Son1 of Son2", 2), true);
+	insertNodeById(tree, 2, createPeople(21, "Son1 of Son2", 2), true);
 	//Son from id 21 with id 211
-	insertNodebyID(tree, 21, createPeople(211, "Son1 of Son21", 21), true);
+	insertNodeById(tree, 21, createPeople(211, "Son1 of Son21", 21), true);
 
-	insertNodebyID(tree, 3, createPeople(31, "Son1 of Son3", 33), true);
+	insertNodeById(tree, 3, createPeople(31, "Son1 of Son3", 33), true);
 
 	cout << "Size of Tree: " << sizeOfNaryTree(tree) << endl;
 
@@ -33,7 +35,15 @@ int main() {
 	return 0;
 }
 
-bool insertNodebyID(NaryTree *tree, int id, void *data, bool searchNode) {
+NaryTree *createNode(int children, void *data) {
+	NaryNode *node = (NaryNode*) calloc(1, sizeof(NaryNode));
+	node->data = data;
+	node->n = children;
+	node->child = (NaryNode**) calloc(children, sizeof(NaryNode*));
+	return node;
+}
+
+bool insertNodeById(NaryTree *tree, int id, void *data, bool searchNode) {
 
 	if (tree == NULL)
 		return false;
@@ -44,25 +54,37 @@ bool insertNodebyID(NaryTree *tree, int id, void *data, bool searchNode) {
 			sPeople people = (*(sPeople*) tree->data);
 
 			if (people.id == id) {
-				appendChild(tree, data);
-				searchNode = false;
-				return searchNode;
+
+				if(!verifyKeySonOfNode(tree, data)){
+					appendChild(tree, data);
+					searchNode = false;
+					return searchNode;
+				}
 			}
 
 			for (int i = 0; i < tree->n; ++i)
-				searchNode = insertNodebyID(tree->child[i], id, data,
+				searchNode = insertNodeById(tree->child[i], id, data,
 						searchNode);
 		}
 	}
 	return searchNode;
 }
 
-NaryTree *createNode(int children, void *data) {
-	NaryNode *node = (NaryNode*) calloc(1, sizeof(NaryNode));
-	node->data = data;
-	node->n = children;
-	node->child = (NaryNode**) calloc(children, sizeof(NaryNode*));
-	return node;
+bool verifyKeySonOfNode(NaryTree *tree, void *data) {
+
+	if (typeid((*(sPeople*) tree->data)) == typeid(sPeople)) {
+
+		for (int i = 0; i < tree->n; ++i) {
+
+			sPeople peopleTree = (*(sPeople*) tree->data);
+			sPeople peopleData = (*(sPeople*) tree->data);
+
+			if (peopleTree.id == peopleData.id) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 int appendChild(NaryNode *root, void *data) {
@@ -93,10 +115,10 @@ void printTree(NaryTree *tree) {
 		cout << "Age:" << people.age << endl;
 		cout << "Name:" << people.name->c_str() << endl;
 		cout << "**************************************:" << endl;
-	}
 
-	for (int i = 0; i < tree->n; i++)
-		printTree(tree->child[i]);
+		for (int i = 0; i < tree->n; i++)
+			printTree(tree->child[i]);
+	}
 }
 
 void freeTree(NaryTree *tree, DataFreeFunc dFree) {
